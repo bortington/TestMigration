@@ -25,6 +25,6 @@ steps:
 
 
 - ${{ if eq(variables.CODACY_PROJECT_TOKEN, 'true') }}:
-  - script: 'echo Hello, we have a codacy project token defined :)'
+  - script: 'echo Hello, we have a codacy project token defined!'
 - ${{ else }}:
-  - script: 'echo No codacy project token defined :('
+  - script: 'echo No codacy project token defined sadface'
