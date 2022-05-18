@@ -32,6 +32,6 @@ steps:
   - script: 'echo We got codacy in variables'
     displayName: Variables contains codacy key
 
-- ${{ each var in variables.*.key }}
+- ${{ each var in variables.* }}
   - script: 'echo key ${{ var }}'
     displayName: Var key
