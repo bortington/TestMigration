@@ -5,9 +5,11 @@
 
 trigger:
 - main
+- feature/*
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-2019'
+  demands: azureps
 
 variables:
 - name: BuildPlatform
