@@ -22,3 +22,9 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+
+- ${{ eq(variables.CODACY_PROJECT_TOKEN, 'true') }}:
+  - script: 'echo Hello, we have a codacy project token defined :)'
+- ${{ eq(variables.CODACY_PROJECT_TOKEN, 'false') }}:
+  - script: 'echo No codacy project token defined :('
