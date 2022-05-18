@@ -14,7 +14,6 @@ variables:
   value: myvalue
 - group: TestVariableGroup
 - name: CODACY_PROJECT_TOKEN
-  value: 1234Hello
 
 steps:
 - script: 'echo Hello, world! Bert token: $(BERT_TOKEN)'
