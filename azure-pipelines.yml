@@ -15,8 +15,8 @@ variables:
 - group: TestVariableGroup
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script. Bert token: $(BERT_TOKEN)'
+- script: 'echo Hello, world! Bert token: $(BERT_TOKEN)'
+  displayName: 'Run a one-line script.'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
