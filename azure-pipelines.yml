@@ -10,6 +10,10 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+- name: BuildPlatform
+  value: 'any cpu'  
+- name: BuildConfiguration
+  value: 'release'
 - name: myvariable
   value: myvalue
 - group: TestVariableGroup
@@ -37,3 +41,20 @@ steps:
 - ${{ if containsValue(variables.*.key, 'CODACY_PROJECT_TOKEN') }}:
   - script: 'echo We got codacy in variables'
     displayName: Variables contains codacy key
+
+- task: NuGetToolInstaller@1
+  displayName: 'Install Nuget'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+
+- task: VSBuild@1
+  displayName: 'Build solution **\*.sln'
+  inputs:
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
