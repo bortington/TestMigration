@@ -44,6 +44,12 @@ steps:
   - script: 'echo We got codacy in variables'
     displayName: Variables contains codacy key
 
+- task: UseDotNet@2
+  displayName: Use .NET 6.0
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
+    
 - task: NuGetToolInstaller@1
   displayName: 'Install Nuget'
 
