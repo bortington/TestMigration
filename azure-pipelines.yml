@@ -9,6 +9,11 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- name: myvariable
+  value: myvalue
+- group: TestVariableGroup
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
@@ -19,3 +24,5 @@ steps:
   displayName: 'Run a multi-line script'
 - ${{each var in variables}}:
   - script: 'echo ${{ var }}'
+
+  
