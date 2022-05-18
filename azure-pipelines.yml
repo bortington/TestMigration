@@ -18,6 +18,10 @@ steps:
 - script: 'echo Hello, world! Bert token: $(BERT_TOKEN)'
   displayName: 'Variable Group Test.'
 
+- script: 'echo Conditional step. Codacy detected! Codacy token: $(CODACY_PROJECT_TOKEN)'
+  displayName: 'Conditional step'
+  condition: $[variables.CODACY_PROJECT_TOKEN]
+
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
