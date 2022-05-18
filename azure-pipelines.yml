@@ -14,8 +14,6 @@ variables:
 - name: myvariable
   value: myvalue
 - group: TestVariableGroup
-- name: CODACY_PROJECT_TOKEN
-  value: asdf
 
 steps:
 - task: AzureKeyVault@2
