@@ -20,7 +20,7 @@ steps:
 
 - script: 'echo Conditional step. Codacy detected! Codacy token: $(CODACY_PROJECT_TOKEN)'
   displayName: 'Conditional step'
-  condition: $[variables.CODACY_PROJECT_TOKEN]
+  condition: variables.CODACY_PROJECT_TOKEN
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
