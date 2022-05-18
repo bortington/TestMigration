@@ -13,8 +13,8 @@ variables:
 - name: myvariable
   value: myvalue
 - group: TestVariableGroup
-- name: CODACY_PROJECT_TOKEN
-  value: asdf
+# - name: CODACY_PROJECT_TOKEN
+#   value: asdf
 
 steps:
 - script: 'echo Hello, world! Bert token: $(BERT_TOKEN)'
