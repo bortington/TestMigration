@@ -31,3 +31,7 @@ steps:
 - ${{ if containsValue(variables.*.key, 'CODACY_PROJECT_TOKEN') }}:
   - script: 'echo We got codacy in variables'
     displayName: Variables contains codacy key
+
+- ${{ each var in variables.*.key }}
+  - script: 'echo key ${{ var }}'
+    displayName: Var key
