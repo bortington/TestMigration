@@ -28,6 +28,6 @@ steps:
 - ${{ else }}:
   - script: 'echo No codacy project token defined sadface. CODACY_PROJECT_TOKEN: $(CODACY_PROJECT_TOKEN)'
 
-- ${{ if contains(variables, 'CODACY_PROJECT_TOKEN') }}:
+- ${{ if containsValue(variables, 'CODACY_PROJECT_TOKEN') }}:
   - script: 'echo We got codacy in variables'
     displayName: Variables contains codacy key
