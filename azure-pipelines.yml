@@ -23,7 +23,7 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
-- ${{ if eq(variables.CODACY_PROJECT_TOKEN, True) }}:
+- ${{ if variables.CODACY_PROJECT_TOKEN }}:
   - script: 'echo Hello, we have a codacy project token defined!'
 - ${{ else }}:
   - script: 'echo No codacy project token defined sadface. CODACY_PROJECT_TOKEN: $(CODACY_PROJECT_TOKEN)'
