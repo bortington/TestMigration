@@ -1,7 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
 trigger:
 - main
@@ -9,7 +5,6 @@ trigger:
 
 pool:
   vmImage: 'windows-2022'
-  demands: azureps
 
 variables:
 - name: BuildPlatform
@@ -20,9 +15,10 @@ variables:
   value: myvalue
 - group: TestVariableGroup
 - name: CODACY_PROJECT_TOKEN
-  value: asdf
+  value: 8d9169861b124d64b64ac236e4c87078
 
 steps:
+
 - script: 'echo Hello, world! Bert token: $(BERT_TOKEN)'
   displayName: 'Variable Group Test.'
 
@@ -66,3 +62,21 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: '(Decorator) Test and Code Coverage'
+  inputs:
+    command: test
+    projects: '**/*Test*.csproj'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+
+- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
+  displayName: 'Generate Test Report'
+  inputs:
+    reports: '**/coverage.cobertura.xml'
+
+- task: Bash@3
+  displayName: 'Upload Code Coverage Report to Codacy'
+  inputs:
+    targetType: 'inline'
+    script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
