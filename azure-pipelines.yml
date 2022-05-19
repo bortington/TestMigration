@@ -84,5 +84,7 @@ steps:
     inputs:
       targetType: 'inline'
       script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
+    env:
+      CODACY_API_TOKEN: $(CODACY-API-TOKEN)
 - ${{ else }}:
   - script: 'echo No codacy api token specified'
