@@ -41,6 +41,9 @@ steps:
 
       $response = Invoke-RestMethod 'https://app.codacy.com/api/v3/repositories' -Method 'POST' -Headers $headers -Body $body -SkipHttpErrorCheck
       
+      $statusCodeInt = [int]$response.BaseResponse.StatusCode
+
+      Write-Host $statusCodeInt
       Write-Host $response
       Write-Host $response.StatusCode
       
