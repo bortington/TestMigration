@@ -59,32 +59,32 @@ steps:
     projects: '**/*.csproj'
     feedsToUse: 'select'
 
-- ${{ if variables.CODACY_ORGANIZATION_PROVIDER }}:
-  - task: VSBuild@1
-    displayName: 'Build solution **\*.sln'
-    inputs:
-      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
-      platform: '$(BuildPlatform)'
-      configuration: '$(BuildConfiguration)'
+# - ${{ if variables.CODACY_ORGANIZATION_PROVIDER }}:
+#   - task: VSBuild@1
+#     displayName: 'Build solution **\*.sln'
+#     inputs:
+#       msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
+#       platform: '$(BuildPlatform)'
+#       configuration: '$(BuildConfiguration)'
 
-  - task: DotNetCoreCLI@2
-    displayName: '(Decorator) Test and Code Coverage'
-    inputs:
-      command: test
-      projects: '**/*Test*.csproj'
-      arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+#   - task: DotNetCoreCLI@2
+#     displayName: '(Decorator) Test and Code Coverage'
+#     inputs:
+#       command: test
+#       projects: '**/*Test*.csproj'
+#       arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
 
-  - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
-    displayName: 'Generate Test Report'
-    inputs:
-      reports: '**/coverage.cobertura.xml'
+#   - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
+#     displayName: 'Generate Test Report'
+#     inputs:
+#       reports: '**/coverage.cobertura.xml'
 
-  - task: Bash@3
-    displayName: 'Upload Code Coverage Report to Codacy'
-    inputs:
-      targetType: 'inline'
-      script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
-    env:
-      CODACY_API_TOKEN: $(CODACY-API-TOKEN)
-- ${{ else }}:
-  - script: 'echo No codacy api token specified'
+#   - task: Bash@3
+#     displayName: 'Upload Code Coverage Report to Codacy'
+#     inputs:
+#       targetType: 'inline'
+#       script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
+#     env:
+#       CODACY_API_TOKEN: $(CODACY-API-TOKEN)
+# - ${{ else }}:
+#   - script: 'echo No codacy api token specified'
