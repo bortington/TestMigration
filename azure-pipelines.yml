@@ -7,15 +7,11 @@ pool:
   vmImage: 'windows-2022'
 
 variables:
-- name: BuildPlatform
-  value: 'any cpu'  
-- name: BuildConfiguration
-  value: 'release'
-- name: myvariable
-  value: myvalue
-- group: TestVariableGroup
-- name: CODACY_PROJECT_TOKEN
-  value: f7cc4f701e444db086b67c7b4771780a
+  BuildPlatform: 'any cpu' 
+  BuildConfiguration: 'release'
+  CODACY_ORGANIZATION_PROVIDER : gh
+  CODACY_USERNAME : badbort
+  CODACY_PROJECT_NAME : Fredproj
 
 steps:
 
@@ -63,27 +59,30 @@ steps:
     projects: '**/*.csproj'
     feedsToUse: 'select'
 
-- task: VSBuild@1
-  displayName: 'Build solution **\*.sln'
-  inputs:
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+- ${{ if variables.CODACY_ORGANIZATION_PROVIDER }}:
+  - task: VSBuild@1
+    displayName: 'Build solution **\*.sln'
+    inputs:
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: '(Decorator) Test and Code Coverage'
-  inputs:
-    command: test
-    projects: '**/*Test*.csproj'
-    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+  - task: DotNetCoreCLI@2
+    displayName: '(Decorator) Test and Code Coverage'
+    inputs:
+      command: test
+      projects: '**/*Test*.csproj'
+      arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
 
-- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
-  displayName: 'Generate Test Report'
-  inputs:
-    reports: '**/coverage.cobertura.xml'
+  - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
+    displayName: 'Generate Test Report'
+    inputs:
+      reports: '**/coverage.cobertura.xml'
 
-- task: Bash@3
-  displayName: 'Upload Code Coverage Report to Codacy'
-  inputs:
-    targetType: 'inline'
-    script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
+  - task: Bash@3
+    displayName: 'Upload Code Coverage Report to Codacy'
+    inputs:
+      targetType: 'inline'
+      script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
+- ${{ else }}:
+  - script: 'echo No codacy api token specified'
