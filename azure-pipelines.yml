@@ -23,11 +23,13 @@ steps:
     KeyVaultName: 'bortington-test-vault'
     SecretsFilter: 'CODACY-API-TOKEN'
     RunAsPreJob: false
+
 - task: PowerShell@2
   displayName: Add project $(CODACY_REPO_PATH) to Codacy $(CODACY_ORGANIZATION_PROVIDER) Provider
   condition: variables.CODACY_REPO_PATH
   inputs:
     targetType: 'inline'
+    pwsh: true
     script: |
       $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
       $headers.Add("api-token", "$(CODACY-API-TOKEN)")
