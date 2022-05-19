@@ -12,7 +12,6 @@ variables:
   CODACY_ORGANIZATION_PROVIDER : gh
   CODACY_USERNAME : badbort
   CODACY_PROJECT_NAME : Fredproj
-  CODACY_REPO_PATH : badbort/Fredproj
 
 steps:
 
