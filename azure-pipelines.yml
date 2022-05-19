@@ -12,6 +12,7 @@ variables:
   CODACY_ORGANIZATION_PROVIDER : gh
   CODACY_USERNAME : badbort
   CODACY_PROJECT_NAME : Fredproj
+  CODACY_REPO_PATH : badbort/Fredproj
 
 steps:
 
@@ -35,12 +36,6 @@ steps:
 - ${{ if containsValue(variables.*.key, 'CODACY_PROJECT_TOKEN') }}:
   - script: 'echo We got codacy in variables'
     displayName: Variables contains codacy key
-
-- task: UseDotNet@2
-  displayName: Use .NET 6.0
-  inputs:
-    packageType: 'sdk'
-    version: '6.0.x'
     
 - task: NuGetToolInstaller@1
   displayName: 'Install Nuget'
@@ -51,6 +46,17 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
     feedsToUse: 'select'
+
+- script: > 
+    curl --location --request POST 'https://app.codacy.com/api/v3/repositories' \
+    --header 'api-token: $(CODACY-API-TOKEN)' \
+    --header 'caller: string' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+      "repositoryFullPath": "$(CODACY_REPO_PATH)",
+      "provider": "$(CODACY_ORGANIZATION_PROVIDER)"
+    }'
+  displayName: Create Codacy Project
 
 # - ${{ if variables.CODACY_ORGANIZATION_PROVIDER }}:
 #   - task: VSBuild@1
