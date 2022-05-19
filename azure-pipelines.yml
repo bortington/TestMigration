@@ -62,7 +62,7 @@ steps:
 - task: PowerShell@2
   displayName: Add Codacy Project
   inputs:
-    script: >
+    script: |
       $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
       $headers.Add("api-token", "OnjmjY7vGCPkwgNmxCXb")
       $headers.Add("caller", "string")
