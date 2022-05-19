@@ -15,7 +15,7 @@ variables:
   value: myvalue
 - group: TestVariableGroup
 - name: CODACY_PROJECT_TOKEN
-  value: 8d9169861b124d64b64ac236e4c87078
+  value: f7cc4f701e444db086b67c7b4771780a
 
 steps:
 
