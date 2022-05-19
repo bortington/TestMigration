@@ -15,13 +15,6 @@ variables:
 
 steps:
 
-- task: AzureKeyVault@2
-  inputs:
-    azureSubscription: 'Azure subscription 1(bd8e250a-66a6-4038-acd8-0d6aced3e3c8)'
-    KeyVaultName: 'bortington-test-vault'
-    SecretsFilter: '*'
-    RunAsPreJob: false
-
 - script: 'echo Hello, world! Bert token: $(BERT_TOKEN)'
   displayName: 'Variable Group Test.'
 
@@ -59,32 +52,47 @@ steps:
     projects: '**/*.csproj'
     feedsToUse: 'select'
 
-# - ${{ if variables.CODACY_ORGANIZATION_PROVIDER }}:
-#   - task: VSBuild@1
-#     displayName: 'Build solution **\*.sln'
-#     inputs:
-#       msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
-#       platform: '$(BuildPlatform)'
-#       configuration: '$(BuildConfiguration)'
+- ${{ if variables.CODACY_PROJECT_NAME }}:
+  - task: CmdLine@2
+    displayName: '(Decorator) Run my script (injected from decorator)'
+    inputs:
+      script: dir
 
-#   - task: DotNetCoreCLI@2
-#     displayName: '(Decorator) Test and Code Coverage'
-#     inputs:
-#       command: test
-#       projects: '**/*Test*.csproj'
-#       arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+  - task: AzureKeyVault@2
+    displayName: (PipelineDecorator) Codacy Vault Secrets
+    inputs:
+      azureSubscription: 'Azure subscription 1(bd8e250a-66a6-4038-acd8-0d6aced3e3c8)'
+      KeyVaultName: 'bortington-test-vault'
+      SecretsFilter: 'CODACY-API-TOKEN'
+      RunAsPreJob: false
 
-#   - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
-#     displayName: 'Generate Test Report'
-#     inputs:
-#       reports: '**/coverage.cobertura.xml'
+  - task: VSBuild@1
+    displayName: '(PipelineDecorator) Build solution **\*.sln'
+    inputs:
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(Build.artifactstagingdirectory)\\"'
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
 
-#   - task: Bash@3
-#     displayName: 'Upload Code Coverage Report to Codacy'
-#     inputs:
-#       targetType: 'inline'
-#       script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
-#     env:
-#       CODACY_API_TOKEN: $(CODACY-API-TOKEN)
-# - ${{ else }}:
-#   - script: 'echo No codacy api token specified'
+  - task: DotNetCoreCLI@2
+    displayName: '(PipelineDecorator) Test and Code Coverage'
+    inputs:
+      command: test
+      projects: '**/*Test*.csproj'
+      arguments: '--configuration $(BuildConfiguration) --collect "Code coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+
+  - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@5
+    displayName: '(PipelineDecorator) Generate Test Report'
+    inputs:
+      reports: '**/coverage.cobertura.xml'
+
+  - task: Bash@3
+    displayName: '(PipelineDecorator) Upload Code Coverage Report to Codacy'
+    inputs:
+      targetType: 'inline'
+      script: 'bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coveragereport/Cobertura.xml'
+    env:
+      CODACY_API_TOKEN: $(CODACY-API-TOKEN)
+
+  - ${{ else }}:
+    - script: 'echo No codacy api token specified'
+      displayName: (PipelineDecorator)
