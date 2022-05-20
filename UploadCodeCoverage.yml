@@ -1,0 +1,10 @@
+repositories:
+  - repository: templates
+    name: Fredproj/FredShared
+
+steps:
+  - template: CodacyCodeCoverage.yml@templates
+    parameters:
+      CodacyProjectPath: badbort/Fredproj
+      CodacyProjectName: Fredproj
+      CodacyOrganizationProvider: gh
