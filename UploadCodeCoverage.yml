@@ -1,3 +1,11 @@
+name: 1.0.0$(Rev:.r)
+trigger:
+- main
+- feature/*
+
+pool:
+  vmImage: 'windows-2019'
+
 resources:
   repositories:
   - repository: templates
