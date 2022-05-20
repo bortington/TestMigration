@@ -1,6 +1,7 @@
-repositories:
-  - repository: templates
-    name: Fredproj/FredShared
+resources:
+  repositories:
+    - repository: templates
+      name: Fredproj/FredShared
 
 steps:
   - template: CodacyCodeCoverage.yml@templates
