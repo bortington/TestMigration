@@ -9,6 +9,7 @@ pool:
 resources:
   repositories:
   - repository: templates
+    type: git # git for Azure repos, github for github
     name: Fredproj/FredShared
 
 jobs:
